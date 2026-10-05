@@ -1,0 +1,67 @@
+held-out edge-alignment check | python 3.13.14 | numpy 2.2.6
+command: python validate_holdout.py --drives 0048 0005 --label dev
+fixed settings: frame step 2, neighbour step 0.5 deg / 10 cm, trigger when < 90% of neighbours score lower
+drive 0048: 22 frames on disk, using 11 (every 2)
+drive 0005: 154 frames on disk, using 77 (every 2)
+tracklet boxes in the loaded frames: {'Van': 152, 'Car': 180, 'Cyclist': 77, 'Pedestrian': 11}
+[  2.2 s] edge fields built on 24 frames (0048/0, 0005/152 ... evenly spaced)
+at KITTI calibration, paper   : neighbours worse 0.942 -> no trigger
+at KITTI calibration, improved: neighbours worse 1.000 -> no trigger
+
+[ 15.4 s] single-axis detection sweep (magnitude in deg for rotation, m for translation)
+ axis  magnitude  neighbours_worse_paper  triggered_paper  neighbours_worse_improved  triggered_improved
+ roll      0.250                   0.923            False                      1.000               False
+ roll      0.500                   0.923            False                      0.981               False
+ roll      1.000                   0.904            False                      0.942               False
+ roll      2.000                   0.904            False                      0.923               False
+pitch      0.250                   1.000            False                      1.000               False
+pitch      0.500                   0.962            False                      0.846                True
+pitch      1.000                   0.865             True                      0.750                True
+pitch      2.000                   0.846             True                      0.885                True
+  yaw      0.250                   0.923            False                      1.000               False
+  yaw      0.500                   0.500             True                      0.750                True
+  yaw      1.000                   0.481             True                      0.750                True
+  yaw      2.000                   0.327             True                      0.731                True
+   tx      0.050                   0.942            False                      1.000               False
+   tx      0.100                   0.885             True                      0.981               False
+   tx      0.200                   0.885             True                      0.962               False
+   ty      0.050                   0.923            False                      1.000               False
+   ty      0.100                   0.558             True                      0.808                True
+   ty      0.200                   0.481             True                      0.731                True
+   tz      0.050                   0.885             True                      0.904               False
+   tz      0.100                   0.865             True                      0.750                True
+   tz      0.200                   0.827             True                      0.615                True
+[ 22.1 s] drift  0: injected 1.50 deg / 5.0 cm | paper trig True  left 0.61 deg | improved trig True  left 0.27 deg
+[ 28.8 s] drift  1: injected 1.99 deg / 3.0 cm | paper trig True  left 0.70 deg | improved trig True  left 0.18 deg
+[ 35.5 s] drift  2: injected 0.75 deg / 5.8 cm | paper trig True  left 0.70 deg | improved trig True  left 0.33 deg
+[ 42.2 s] drift  3: injected 1.74 deg / 5.8 cm | paper trig True  left 0.32 deg | improved trig True  left 0.33 deg
+[ 48.9 s] drift  4: injected 1.40 deg / 4.4 cm | paper trig False left 0.46 deg | improved trig False left 0.20 deg
+[ 55.5 s] drift  5: injected 1.65 deg / 4.7 cm | paper trig True  left 0.40 deg | improved trig True  left 0.09 deg
+[ 62.1 s] drift  6: injected 1.83 deg / 5.6 cm | paper trig True  left 0.98 deg | improved trig True  left 0.33 deg
+[ 68.7 s] drift  7: injected 1.12 deg / 4.8 cm | paper trig False left 0.57 deg | improved trig True  left 0.30 deg
+[ 75.4 s] drift  8: injected 1.19 deg / 4.7 cm | paper trig True  left 0.82 deg | improved trig True  left 0.29 deg
+[ 82.4 s] drift  9: injected 1.51 deg / 5.0 cm | paper trig True  left 0.67 deg | improved trig True  left 0.38 deg
+[ 89.5 s] drift 10: injected 0.74 deg / 4.4 cm | paper trig True  left 0.74 deg | improved trig True  left 0.36 deg
+[ 96.5 s] drift 11: injected 1.87 deg / 3.9 cm | paper trig True  left 0.53 deg | improved trig True  left 0.28 deg
+[103.5 s] drift 12: injected 1.65 deg / 6.9 cm | paper trig True  left 0.99 deg | improved trig True  left 0.27 deg
+[110.5 s] drift 13: injected 1.42 deg / 5.4 cm | paper trig True  left 0.45 deg | improved trig True  left 0.42 deg
+[118.8 s] drift 14: injected 1.24 deg / 3.0 cm | paper trig False left 0.80 deg | improved trig False left 0.14 deg
+[127.6 s] drift 15: injected 1.79 deg / 3.1 cm | paper trig True  left 0.54 deg | improved trig True  left 0.29 deg
+[135.0 s] drift 16: injected 2.04 deg / 6.2 cm | paper trig True  left 0.42 deg | improved trig True  left 0.24 deg
+[142.1 s] drift 17: injected 1.14 deg / 2.6 cm | paper trig True  left 0.37 deg | improved trig True  left 0.17 deg
+[149.2 s] drift 18: injected 0.91 deg / 6.9 cm | paper trig True  left 0.64 deg | improved trig True  left 0.37 deg
+[156.2 s] drift 19: injected 1.91 deg / 4.9 cm | paper trig True  left 0.62 deg | improved trig True  left 0.29 deg
+
+[162.8 s] summary for 'dev' (drives 0048 0005, 24 monitor frames; random drifts median 1.50 deg injected)
+                             paper    improved
+false alarm at truth    no (0.942)  no (1.000)
+single-axis detection         57 %        48 %
+random-drift detection        85 %        90 %
+residual rot median       0.61 deg    0.29 deg
+residual rot p90          0.83 deg    0.37 deg
+median |roll| left        0.33 deg    0.08 deg
+median |pitch| left       0.43 deg    0.16 deg
+median |yaw| left         0.09 deg    0.10 deg
+score peak vs KITTI       0.50 deg    0.15 deg
+
+outputs in C:\Users\vieth\Documents\vinuni\K4-Track4-Day4-T3-CalibDrift\results\holdout

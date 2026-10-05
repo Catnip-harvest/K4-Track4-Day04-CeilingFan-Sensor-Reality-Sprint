@@ -1,0 +1,115 @@
+T3 calibration-drift benchmark | python 3.13.14 | numpy 2.2.6
+command: python run_benchmark.py 
+drive 0048: 22 frames on disk, using 11 (every 2)
+drive 0005: 154 frames on disk, using 77 (every 2)
+focal length 721.5 px | 88 frames | 241 object views {'Car': 88, 'Van': 84, 'Cyclist': 66, 'Pedestrian': 3}
+object distance: median 17.0 m, near<20 m 152, far 89
+[  1.1 s] data loaded
+[ 29.1 s] sweeps done
+
+Rotation drift (KITTI calibration = ground truth)
+ axis  drift_deg  reproj_median_px  association_retention_pct  association_retention_pct_far  objects_lost_pct  range_miss_pct  range_miss_pct_far
+ roll        0.0               0.0                      100.0                          100.0               0.0             3.3                 9.0
+ roll        0.1               0.5                      100.0                          100.0               0.0             3.3                 9.0
+ roll        0.2               1.2                       99.9                           99.8               0.0             3.3                 9.0
+ roll        0.5               2.4                       99.6                           99.1               0.0             3.3                 9.0
+ roll        0.8               3.6                       99.0                           97.6               0.0             3.7                10.1
+ roll        1.0               4.8                       98.8                           97.3               0.0             3.7                 9.0
+ roll        1.5               7.2                       97.8                           95.7               0.0             3.7                 9.0
+ roll        2.0               9.5                       96.5                           93.4               0.0             3.7                 9.0
+ roll        3.0              14.2                       94.0                           88.7               0.0             3.7                 9.0
+pitch        0.0               0.0                      100.0                          100.0               0.0             3.3                 9.0
+pitch        0.1               1.3                      100.0                          100.0               0.0             3.7                10.1
+pitch        0.2               3.3                       99.9                           99.7               0.0             4.1                11.2
+pitch        0.5               6.5                       98.7                           96.6               0.0             3.7                10.1
+pitch        0.8               9.8                       95.4                           87.7               1.2             5.4                14.6
+pitch        1.0              13.0                       91.5                           78.1               2.9             4.6                12.4
+pitch        1.5              19.5                       82.5                           59.7               8.3            12.0                32.6
+pitch        2.0              26.0                       72.3                           41.2              22.4            27.0                60.7
+pitch        3.0              39.1                       55.2                           17.9              38.2            66.8                96.6
+  yaw        0.0               0.0                      100.0                          100.0               0.0             3.3                 9.0
+  yaw        0.1               1.5                       99.8                           99.5               0.0             2.9                 7.9
+  yaw        0.2               3.6                       99.3                           98.3               0.0             2.9                 7.9
+  yaw        0.5               7.2                       97.6                           94.3               0.0             1.7                 4.5
+  yaw        0.8              10.9                       95.1                           89.5               0.0             1.7                 1.1
+  yaw        1.0              14.5                       92.3                           84.7               0.0             5.4                 1.1
+  yaw        1.5              21.7                       84.6                           73.4               5.8            30.3                13.5
+  yaw        2.0              28.9                       74.8                           61.5              20.3            44.4                44.9
+  yaw        3.0              43.2                       54.4                           40.6              35.7            63.1                77.5
+
+Translation drift
+axis  drift_cm  reproj_median_px_0-10m  reproj_median_px_20-40m  association_retention_pct_near  association_retention_pct_far  range_miss_pct
+  tx       0.0                     0.0                      0.0                           100.0                          100.0             3.3
+  tx       2.0                     0.9                      0.2                           100.0                          100.0             3.3
+  tx       5.0                     2.2                      0.4                           100.0                          100.0             3.3
+  tx      10.0                     4.4                      0.8                           100.0                          100.0             3.7
+  tx      20.0                     8.7                      1.5                           100.0                          100.0             4.1
+  ty       0.0                     0.0                      0.0                           100.0                          100.0             3.3
+  ty       2.0                     1.9                      0.5                           100.0                          100.0             2.9
+  ty       5.0                     4.8                      1.4                           100.0                           99.8             2.9
+  ty      10.0                     9.5                      2.7                            99.9                           99.2             2.9
+  ty      20.0                    19.1                      5.4                            98.4                           97.1             4.1
+  tz       0.0                     0.0                      0.0                           100.0                          100.0             3.3
+  tz       2.0                     1.9                      0.5                           100.0                          100.0             3.3
+  tz       5.0                     4.8                      1.4                            99.9                           99.1             3.3
+  tz      10.0                     9.6                      2.7                            99.1                           97.9             3.7
+  tz      20.0                    19.1                      5.4                            95.0                           93.4             4.1
+
+[ 54.1 s] monitor done (24 frames, neighbour step 0.5 deg / 10 cm, trigger when < 90% of 52 neighbours score lower)
+paper = depth jumps along each laser ring (Levinson & Thrun); improved = also across adjacent rings
+method                       paper  improved  triggered_paper  triggered_improved
+kind        axis  magnitude                                                      
+rotation    roll  0.00       0.942     1.000            False               False
+                  0.25       0.923     1.000            False               False
+                  0.50       0.923     0.981            False               False
+                  0.75       0.904     0.981            False               False
+                  1.00       0.904     0.942            False               False
+                  1.50       0.904     0.923            False               False
+                  2.00       0.904     0.923            False               False
+            pitch 0.00       0.942     1.000            False               False
+                  0.25       1.000     1.000            False               False
+                  0.50       0.962     0.846            False                True
+                  0.75       0.904     0.750            False                True
+                  1.00       0.865     0.750             True                True
+                  1.50       0.865     0.769             True                True
+                  2.00       0.846     0.885             True                True
+            yaw   0.00       0.942     1.000            False               False
+                  0.25       0.923     1.000            False               False
+                  0.50       0.500     0.750             True                True
+                  0.75       0.481     0.731             True                True
+                  1.00       0.481     0.750             True                True
+                  1.50       0.442     0.750             True                True
+                  2.00       0.327     0.731             True                True
+translation tx    0.00       0.942     1.000            False               False
+                  0.05       0.942     1.000            False               False
+                  0.10       0.885     0.981             True               False
+                  0.15       0.885     0.962             True               False
+                  0.20       0.885     0.962             True               False
+            ty    0.00       0.942     1.000            False               False
+                  0.05       0.923     1.000            False               False
+                  0.10       0.558     0.808             True                True
+                  0.15       0.481     0.712             True                True
+                  0.20       0.481     0.731             True                True
+            tz    0.00       0.942     1.000            False               False
+                  0.05       0.885     0.904             True               False
+                  0.10       0.865     0.750             True                True
+                  0.15       0.865     0.692             True                True
+                  0.20       0.827     0.615             True                True
+
+[ 72.9 s] refinement done (rotation only; health check by the improved monitor)
+                              kitti_calibration realistic_drift refined_paper refined_improved
+rotation_error_deg                         0.00            1.47          0.52             0.12
+roll_error_deg                            -0.00            0.30          0.18             0.02
+pitch_error_deg                            0.00           -0.80          0.49             0.11
+yaw_error_deg                             -0.00            1.20          0.07             0.04
+translation_error_cm                       0.00            5.00          5.00             5.00
+neighbours_worse                           1.00            0.44          0.87             1.00
+recalibration_triggered                   False            True          True            False
+reproj_median_px                           0.00           20.72          6.13             1.51
+association_retention_pct                100.00           82.67         99.05            99.98
+association_retention_pct_far            100.00           69.02         97.42            99.95
+range_miss_pct                             3.32           23.65          3.32             3.32
+score peak of the paper variant sits 0.50 deg from the KITTI calibration
+score peak of the improved variant sits 0.15 deg from the KITTI calibration
+
+[ 74.8 s] finished. Results in C:\Users\vieth\Documents\vinuni\K4-Track4-Day4-T3-CalibDrift\results
