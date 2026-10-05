@@ -1,7 +1,7 @@
 ================================================================
   DEMO: camera-LiDAR bị va lệch -> báo động -> tự hiệu chuẩn lại
 ================================================================
-[  0.6 s] Dữ liệu: KITTI drive 0052, 12 khung hình, 35 vật có nhãn
+[  0.7 s] Dữ liệu: KITTI drive 0052, 12 khung hình, 35 vật có nhãn
 
 1) Hiệu chuẩn đúng (KITTI)
    Sức khỏe: OK - hiệu chuẩn tốt   (100% hàng xóm kém hơn, ngưỡng 90%)
@@ -22,7 +22,7 @@
    Late fusion đo sai khoảng cách: 26 % -> 11 %
    (1.9 s)
 
-4) Ảnh trước/sau: results\demo\demo_before_after.png   (0.8 s)
+4) Ảnh trước/sau: results\demo\demo_before_after.png   (0.9 s)
 ================================================================
   Xong trong 4 s. Kết quả: results\demo
 ================================================================

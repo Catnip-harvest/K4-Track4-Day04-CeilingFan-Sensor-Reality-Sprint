@@ -1,0 +1,8 @@
+SoftCorr 331c61911957 on the T3 harness | python 3.13.14 | torch 2.11.0+cu128 | NVIDIA GeForce RTX 4060 Laptop GPU
+command: python softcorr_eval.py --drives 0052 --label holdout --frames-per-drive 1 --time-budget-min 10
+SoftCorr config unchanged from configs/softcorr.yaml: ladder [8, 6, 4, 3, 2, 1.5, 1] x 90 steps, max 150000 points
+frames: 0052/39
+[   5.8 s] MoGe-2 depth for 1 frames in 5.8 s (cached ones are instant), peak VRAM 2.22 GB
+conversion check: 16605 points visible in both projections, max pixel difference 0.0002 px (tolerance 0.5 px); round trip velo_to_cam -> SoftCorr -> velo_to_cam max error 1.11e-16
+[  89.9 s] started AT the KITTI calibration (83.8 s): moved away by median 0.241 deg / 1.8 cm | best_score 0.241 deg / 1.8 cm | per frame 0.241 deg
+[ 177.2 s] drift  0: injected 1.50 deg / 5.0 cm -> median left 0.242 deg / 1.8 cm, best-score left 0.242 deg / 1.8 cm (87 s)

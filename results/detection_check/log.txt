@@ -1,0 +1,73 @@
+detection-based drift check | python 3.13.14 | numpy 2.5.2
+drive 0048: camera detections read from cache (yolo26n.pt)
+drive 0048: 11 frames, 73 camera boxes kept, 63 tracklet boxes, 42 pairs matched at truth (median IoU 0.85)
+drive 0005: camera detections read from cache (yolo26n.pt)
+drive 0005: 77 frames, 543 camera boxes kept, 357 tracklet boxes, 244 pairs matched at truth (median IoU 0.68)
+drive 0052: camera detections read from cache (yolo26n.pt)
+drive 0052: 39 frames, 264 camera boxes kept, 300 tracklet boxes, 118 pairs matched at truth (median IoU 0.80)
+sign check on dev, +1 deg yaw: du +0.19 -> -13.57 px (expected about 12.6 px) -> yaw_hat = -1 * atan(du / f)
+sign check on dev, +1 deg pitch: dv +0.82 -> +13.70 px -> pitch_hat = +1 * atan(dv / f)
+dev at truth: mean IoU 0.699, du +0.19 px, dv +0.82 px; bootstrap (118 pairs): IoU std 0.017, du std 0.35 px, dv std 0.28 px -> offset tolerance 3.0 px
+
+[  0.6 s] single-axis sweep + realistic drift
+drive_set      axis  magnitude_deg  mean_iou  median_du_px  median_dv_px  share_iou_below_0.5  flag_iou  flag_offset  yaw_hat_deg_debiased  pitch_hat_deg_debiased  residual_rotation_deg_debiased
+      dev      roll          0.000     0.699         0.194         0.817                0.189     False        False                -0.000                   0.000                           0.000
+      dev      roll          0.250     0.701         0.078         0.609                0.178     False        False                 0.009                  -0.016                           0.251
+      dev      roll          0.500     0.699        -0.138         0.410                0.168     False        False                 0.026                  -0.032                           0.502
+      dev      roll          1.000     0.682        -0.464         0.417                0.168     False        False                 0.052                  -0.032                           1.002
+      dev      roll          2.000     0.630        -1.079         0.041                0.248      True        False                 0.101                  -0.062                           2.003
+      dev     pitch          0.000     0.699         0.194         0.817                0.189     False        False                -0.000                   0.000                           0.000
+      dev     pitch          0.250     0.675         0.316         4.029                0.210     False         True                -0.010                   0.255                           0.011
+      dev     pitch          0.500     0.630         0.437         7.251                0.231      True         True                -0.019                   0.511                           0.022
+      dev     pitch          1.000     0.531         0.556        13.704                0.500      True         True                -0.029                   1.023                           0.037
+      dev     pitch          2.000     0.366         0.901        26.602                0.780      True         True                -0.056                   2.047                           0.073
+      dev       yaw          0.000     0.699         0.194         0.817                0.189     False        False                -0.000                   0.000                           0.000
+      dev       yaw          0.250     0.686        -3.312         0.861                0.178     False         True                 0.278                   0.004                           0.029
+      dev       yaw          0.500     0.655        -6.746         0.812                0.189     False         True                 0.551                  -0.000                           0.051
+      dev       yaw          1.000     0.578       -13.566         0.973                0.357      True         True                 1.093                   0.012                           0.093
+      dev       yaw          2.000     0.418       -27.434         1.163                0.626      True         True                 2.193                   0.028                           0.195
+      dev realistic            NaN     0.464       -16.598        -9.447                0.633      True         True                 1.333                  -0.815                           0.327
+  holdout      roll          0.000     0.720        -1.341        -0.663                0.127     False        False                 0.122                  -0.117                           0.169
+  holdout      roll          0.250     0.722        -1.407        -1.128                0.127     False        False                 0.127                  -0.154                           0.320
+  holdout      roll          0.500     0.719        -1.500        -1.596                0.127     False        False                 0.135                  -0.192                           0.552
+  holdout      roll          1.000     0.703        -1.687        -3.041                0.153     False         True                 0.149                  -0.306                           1.056
+  holdout      roll          2.000     0.662        -2.003        -6.057                0.288      True         True                 0.174                  -0.546                           2.080
+  holdout     pitch          0.000     0.720        -1.341        -0.663                0.127     False        False                 0.122                  -0.117                           0.169
+  holdout     pitch          0.250     0.708        -1.320         2.544                0.144     False        False                 0.120                   0.137                           0.165
+  holdout     pitch          0.500     0.662        -1.301         5.765                0.203      True         True                 0.119                   0.393                           0.160
+  holdout     pitch          1.000     0.569        -1.272        12.240                0.356      True         True                 0.116                   0.907                           0.149
+  holdout     pitch          2.000     0.412        -1.281        25.017                0.746      True         True                 0.117                   1.921                           0.141
+  holdout       yaw          0.000     0.720        -1.341        -0.663                0.127     False        False                 0.122                  -0.117                           0.169
+  holdout       yaw          0.250     0.718        -4.668        -0.602                0.127     False         True                 0.386                  -0.113                           0.177
+  holdout       yaw          0.500     0.687        -8.002        -0.523                0.153     False         True                 0.651                  -0.106                           0.185
+  holdout       yaw          1.000     0.603       -14.686        -0.308                0.322      True         True                 1.181                  -0.089                           0.202
+  holdout       yaw          2.000     0.450       -28.304        -0.068                0.720      True         True                 2.262                  -0.070                           0.271
+  holdout realistic            NaN     0.480       -17.131       -11.282                0.737      True         True                 1.375                  -0.961                           0.381
+
+[  0.8 s] 20 random drifts on 0052 (validate_holdout.py generator, seed 7)
+ drift_id   roll  pitch    yaw  injected_rotation_deg  mean_iou  flag_iou  flag_offset  residual_rotation_deg_raw  residual_rotation_deg_debiased  residual_roll_deg_debiased
+        0  0.375  1.192  0.827                  1.496     0.511      True         True                      0.442                           0.478                       0.371
+        1 -1.484  0.964  0.891                  1.987     0.489      True         True                      1.532                           1.518                      -1.478
+        2 -0.735 -0.165  0.014                  0.754     0.687     False         True                      0.771                           0.780                      -0.736
+        3  0.367  1.467 -0.854                  1.739     0.441      True         True                      0.394                           0.395                       0.366
+        4 -1.393  0.045 -0.101                  1.397     0.674     False        False                      1.412                           1.404                      -1.393
+        5 -0.009 -0.757 -1.465                  1.649     0.495      True         True                      0.110                           0.133                      -0.008
+        6 -0.391 -1.489  0.990                  1.828     0.416      True         True                      0.435                           0.464                      -0.395
+        7  0.029  1.041  0.419                  1.123     0.561      True         True                      0.055                           0.115                       0.029
+        8  0.023  1.114 -0.416                  1.190     0.519      True         True                      0.058                           0.085                       0.024
+        9 -0.531 -1.049  0.949                  1.508     0.467      True         True                      0.624                           0.633                      -0.531
+       10  0.315  0.414  0.529                  0.741     0.635      True         True                      0.348                           0.358                       0.315
+       11 -0.293 -1.210  1.403                  1.874     0.418      True         True                      0.416                           0.419                      -0.292
+       12  1.122  0.487 -1.105                  1.652     0.624      True         True                      1.235                           1.263                       1.129
+       13  0.209 -1.064 -0.923                  1.422     0.503      True         True                      0.219                           0.237                       0.210
+       14  1.152  0.425  0.209                  1.245     0.680     False         True                      1.172                           1.185                       1.151
+       15 -1.386  1.129 -0.097                  1.789     0.525      True         True                      1.395                           1.389                      -1.386
+       16 -1.424 -0.383 -1.409                  2.043     0.551      True         True                      1.442                           1.438                      -1.426
+       17 -0.215  0.071  1.118                  1.141     0.577      True         True                      0.303                           0.329                      -0.218
+       18 -0.434  0.057  0.796                  0.908     0.657      True         True                      0.451                           0.474                      -0.436
+       19 -1.484  0.759  0.932                  1.915     0.532      True         True                      1.499                           1.494                      -1.482
+
+[  1.7 s] held-out 0052: random-drift detection IoU rule 85 %, offset rule 95 %; residual (debiased) median 0.48 deg, p90 1.44 deg
+edge monitor (paper) on 0052: detection 95 %, residual median 0.55 deg, p90 0.70 deg
+edge monitor (improved) on 0052: detection 90 %, residual median 0.44 deg, p90 1.75 deg
+outputs in C:\Users\vieth\Documents\vinuni\K4-Track4-Day4-T3-CalibDrift\results\detection_check
