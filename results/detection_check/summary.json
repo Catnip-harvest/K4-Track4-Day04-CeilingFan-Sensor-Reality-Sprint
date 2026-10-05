@@ -1,0 +1,127 @@
+{
+  "detector": "yolo26n.pt",
+  "lidar_side": "KITTI tracklet 3D boxes as a stand-in for a LiDAR 3D detector (upper bound)",
+  "settings": {
+    "frame_step": 2,
+    "classes": [
+      "bicycle",
+      "bus",
+      "car",
+      "motorcycle",
+      "person",
+      "truck"
+    ],
+    "min_confidence": 0.4,
+    "detector_image_size": 1280,
+    "match_iou": 0.3,
+    "min_box_px": 12,
+    "iou_drop_flag": 0.05,
+    "offset_tolerance_px": 3.0,
+    "focal_length_px": 721.5377
+  },
+  "pairs_at_truth": {
+    "0048": 42,
+    "0005": 244,
+    "0052": 118
+  },
+  "signs": {
+    "yaw_sign": -1.0,
+    "pitch_sign": 1.0,
+    "dev_du_at_truth_px": 0.1939259722043971,
+    "dev_du_at_yaw_plus_1deg_px": -13.566319764563332,
+    "dev_dv_at_truth_px": 0.816650877373803,
+    "dev_dv_at_pitch_plus_1deg_px": 13.70409636340392
+  },
+  "dev_truth": {
+    "mean_iou": 0.6991000701132213,
+    "median_du_px": 0.1939259722043971,
+    "median_dv_px": 0.816650877373803,
+    "share_iou_below_0.5": 0.1888111888111888,
+    "pairs_still_in_image": 286
+  },
+  "dev_truth_bootstrap": {
+    "mean_iou_std": 0.01654330604352516,
+    "median_du_std_px": 0.35316517702439776,
+    "median_dv_std_px": 0.2823128980308984,
+    "sample_size": 118
+  },
+  "mean_iou_at_truth": {
+    "dev": 0.6991000701132213,
+    "holdout": 0.7202323533551299
+  },
+  "flag_rules": {
+    "flag_iou": "mean IoU of the frozen pairs < its value at the true calibration on the same drive - 0.05",
+    "flag_offset": "|median du - dev bias| or |median dv - dev bias| > 3.0 px (bias and tolerance = max(3 px, 4 x bootstrap std) from dev drives at the true calibration)"
+  },
+  "holdout": {
+    "false_alarm_at_truth": {
+      "flag_iou": false,
+      "flag_offset": false
+    },
+    "single_axis_detection_rate": {
+      "flag_iou": 0.5,
+      "flag_offset": 0.75
+    },
+    "random_drift_detection_rate": {
+      "flag_iou": 0.85,
+      "flag_offset": 0.95
+    },
+    "correction": {
+      "raw": {
+        "residual_rotation_deg_median": 0.44662860816844,
+        "residual_rotation_deg_p90": 1.447802169078789,
+        "residual_rotation_deg_max": 1.5318622542819573,
+        "residual_roll_deg_median_abs": 0.4146134930814995,
+        "residual_pitch_deg_median_abs": 0.10533505263360624,
+        "residual_yaw_deg_median_abs": 0.1336815830072389,
+        "realistic_drift_residual_deg": 0.3512787838639067
+      },
+      "debiased": {
+        "residual_rotation_deg_median": 0.47600666980710554,
+        "residual_rotation_deg_p90": 1.444009063822918,
+        "residual_rotation_deg_max": 1.5176083647255698,
+        "residual_roll_deg_median_abs": 0.41575733127326686,
+        "residual_pitch_deg_median_abs": 0.09900608341442702,
+        "residual_yaw_deg_median_abs": 0.1486601083312849,
+        "realistic_drift_residual_deg": 0.3807825347353325
+      },
+      "iterated": {
+        "residual_rotation_deg_median": 0.44914184661734324,
+        "residual_rotation_deg_p90": 1.4587994462558556,
+        "residual_rotation_deg_max": 1.5135709342189971,
+        "residual_roll_deg_median_abs": 0.4144853442551061,
+        "residual_pitch_deg_median_abs": 0.09009873335728108,
+        "residual_yaw_deg_median_abs": 0.10237730679102364,
+        "realistic_drift_residual_deg": 0.3248105114238158
+      }
+    },
+    "realistic_drift": {
+      "mean_iou": 0.4798683644970853,
+      "median_du_px": -17.131298311220917,
+      "median_dv_px": -11.282397894534697,
+      "share_iou_below_0.5": 0.7372881355932204,
+      "flag_iou": true,
+      "flag_offset": true,
+      "yaw_hat_deg_raw": 1.3601045566679382,
+      "pitch_hat_deg_raw": -0.8958382975722707
+    }
+  },
+  "edge_monitor_holdout_0052": {
+    "paper": {
+      "random_drift_detection_rate": 0.95,
+      "single_axis_detection_rate": 0.47619047619047616,
+      "residual_rotation_deg_median": 0.5486924328854474,
+      "residual_rotation_deg_p90": 0.7011051955152549,
+      "residual_roll_deg_median_abs": 0.2979936576354395
+    },
+    "improved": {
+      "random_drift_detection_rate": 0.9,
+      "single_axis_detection_rate": 0.5714285714285714,
+      "residual_rotation_deg_median": 0.4393967852680637,
+      "residual_rotation_deg_p90": 1.7482973917330347,
+      "residual_roll_deg_median_abs": 0.1298583191642061
+    }
+  },
+  "note_single_axis_rates": "edge single-axis rate also includes tx/ty/tz drifts; this check sweeps rotation only",
+  "runtime_s": 3.1279468536376953
+}

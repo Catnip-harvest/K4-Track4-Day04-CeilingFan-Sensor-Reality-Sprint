@@ -20,11 +20,22 @@ It does three things:
    land on image edges. If the current extrinsic is not a local best, the monitor asks for re-calibration.
 3. **Rotation refinement.** Climb the same edge score from a realistic drift and measure what is recovered.
 
-The written report (Vietnamese, one page plus figures) is [REPORT.md](REPORT.md).
+Documents (Vietnamese):
+
+- [REPORT_1PAGE.md](REPORT_1PAGE.md) — the one-page report
+- [REPORT.md](REPORT.md) — the full report with all tables and figures
+- [SUBMISSION.md](SUBMISSION.md) — requirement-to-evidence map, Step 1 problem table, Step 2 source notes, exact commands
+- [TEAMMATES.md](TEAMMATES.md) — the five members and student IDs
+- [reports/](reports/) — one individual report per member ([reports/README.md](reports/README.md) lists the file names)
+- [TEAM_TASKS.md](TEAM_TASKS.md) — what each member still has to do, with a copy-paste prompt for their coding agent
+
+Repository: https://github.com/Catnip-harvest/K4-Track4-Day04-CeilingFan-Sensor-Reality-Sprint
 
 ## Requirements
 
 - Python 3.13 (tested with 3.13.14), CPU only. No GPU, no ROS, no training, no pretrained weights.
+  This covers the core benchmark, the held-out check and the demo. The two optional extras below
+  (detection check, SoftCorr) use pretrained models and their own virtual environments.
 - Packages actually imported by the code: `numpy`, `pandas`, `matplotlib`, `pillow`, `opencv-python`.
   `scipy` is listed in the course template but the current code does not import it.
 
@@ -98,6 +109,40 @@ Result in short: on 0052 the improved variant is better in median (0.44° vs 0.5
 reliable (90th percentile 1.75° vs 0.70°, three refinements stuck at a roll–pitch false peak).
 See REPORT.md, section 3.
 
+### Detection consistency check (`detection_check.py`)
+
+The teacher-suggested check: compare the camera detector's 2D boxes (Ultralytics YOLO26n, COCO) with
+LiDAR 3D boxes projected through the current extrinsic. The KITTI tracklet boxes stand in for a LiDAR
+detector, so the numbers are an upper bound. Method and results: [docs/DETECTION_CHECK.md](docs/DETECTION_CHECK.md).
+
+It needs `ultralytics`, which pulls in PyTorch, so it runs in its own virtual environment (CPU is enough):
+
+```bash
+python -m venv .venv-yolo
+.venv-yolo/Scripts/python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+.venv-yolo/Scripts/python -m pip install ultralytics pandas
+.venv-yolo/Scripts/python detection_check.py
+```
+
+Committed run: ultralytics 8.4.173, torch 2.10.0+cpu, numpy 2.5.2. The first run downloads `yolo26n.pt`
+into `.cache/ultralytics/` and caches the detections per drive; after that the whole run takes about 3 s.
+It reads drives 0048, 0005 (development) and 0052 (held-out), so fetch all three first.
+On Linux/macOS use `.venv-yolo/bin/python` instead of `.venv-yolo/Scripts/python`.
+
+### SoftCorr (`softcorr_eval.py`)
+
+Scores SoftCorr (https://github.com/yuhyun00/SoftCorr, training-free 6-DoF LiDAR–camera calibration
+with MoGe-2 depth) on the same 20 random drifts as `validate_holdout.py`. It needs a CUDA GPU and its
+own environment; the full setup, pinned commits and measured numbers are in
+[docs/SOFTCORR_SETUP.md](docs/SOFTCORR_SETUP.md). The committed run:
+
+```bash
+.venv-softcorr/Scripts/python.exe softcorr_eval.py --drives 0052 --label holdout --frames-per-drive 1 --time-budget-min 10
+```
+
+It stopped at its 10-minute budget after 5 of the 20 drifts (one frame each, about 87 s per drift on an
+RTX 4060 Laptop GPU). All 20 drifts with 3 frames each need about 90 minutes.
+
 ## 3. Outputs
 
 All written to `results/` by one run.
@@ -122,6 +167,16 @@ Written to `results/holdout/` by `validate_holdout.py`, one set per `--label` (`
 | `<label>_random_drifts.csv` | one row per random drift: injected roll/pitch/yaw/tx/ty/tz, health and trigger, residual rotation (total and per axis) for each variant |
 | `<label>_log.txt` | full console log of the run, ending in a paper-vs-improved summary table |
 
+Written by the optional extras:
+
+| File | What it is |
+|---|---|
+| `results/detection_check/summary.json` | detection check: settings, pairs at truth, flag rules, held-out 0052 detection rates and residual rotation, comparison with the edge monitor |
+| `results/detection_check/sweep.csv`, `random_drifts_0052.csv`, `detection_check.png`, `log.txt` | single-axis sweep, per-drift results on 0052, figure, console log |
+| `results/softcorr/holdout_summary.json` | SoftCorr on 0052: commit, frames, drifts evaluated (5 of 20), residual rotation and translation, comparison with the edge methods on the same drifts, timing, VRAM |
+| `results/softcorr/holdout_random_drifts.csv`, `holdout_log.txt` | one row per evaluated drift; console log |
+| `results/softcorr/example_log.txt`, `example_nvidia_smi.csv` | SoftCorr's own README example and the GPU memory trace |
+
 Metric definitions (all against the KITTI calibration):
 
 - **Reprojection error** — pixel distance between where a LiDAR point lands with the true and the
@@ -139,6 +194,9 @@ Metric definitions (all against the KITTI calibration):
 get_data.py            parallel-range downloader + selective unzip for KITTI raw
 run_benchmark.py       the whole pipeline: sweeps, monitor, refinement, tables, figures
 validate_holdout.py    held-out check of monitor + refinement with fixed settings
+demo.py                one realistic drift: alarm, refinement, before/after figure
+detection_check.py     detection consistency check (YOLO26n vs projected LiDAR boxes; .venv-yolo)
+softcorr_eval.py       SoftCorr on the same drifts (GPU; .venv-softcorr)
 t3calib/
   kitti.py             calibration, Velodyne scans, cam-2 images, tracklet boxes
   geometry.py          Drift (roll/pitch/yaw/tx/ty/tz in LiDAR axes), projection, box helpers
@@ -146,8 +204,13 @@ t3calib/
   edge_alignment.py    targetless edge score, health check, rotation refinement
 results/               outputs of the committed run (see above)
 results/holdout/       outputs of validate_holdout.py (dev and holdout)
+results/detection_check/, results/softcorr/   outputs of the two extras
+docs/                  DETECTION_CHECK.md, SOFTCORR_SETUP.md
+reports/               individual reports, one per member
 data/                  KITTI files, created by get_data.py (not committed)
-REPORT.md              the one-page report (Vietnamese)
+REPORT.md              the full report (Vietnamese); REPORT_1PAGE.md is the one-page version
+SUBMISSION.md          submission map, Step 1 / Step 2 notes, exact commands
+TEAMMATES.md, TEAM_TASKS.md   members and remaining work
 ```
 
 ## Changing parameters
