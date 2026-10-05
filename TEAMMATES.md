@@ -12,6 +12,6 @@ Mỗi thành viên chỉ sửa đúng dòng của mình (để các PR song song
 
 3. **Hoàng Quốc Việt** — MSSV: 2A202602563
 
-4. **Nguyễn Hoàng Sơn** — MSSV: [tự điền]
+4. **Nguyễn Hoàng Sơn** — MSSV: 2A202602457
 
 5. **Dương Dương** — MSSV: [tự điền]
