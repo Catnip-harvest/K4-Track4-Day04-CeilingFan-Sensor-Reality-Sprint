@@ -1,0 +1,12 @@
+# KITTI raw data: download with `python get_data.py` (CC BY-NC-SA 3.0, not redistributed here)
+data/
+*.zip
+*.zip.done
+
+# SoftCorr environment and third-party checkout (see docs/SOFTCORR_SETUP.md)
+.venv-softcorr/
+third_party/
+.cache/
+
+__pycache__/
+*.pyc
