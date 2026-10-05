@@ -6,7 +6,7 @@
 
 Mỗi thành viên chỉ sửa đúng dòng của mình (để các PR song song không xung đột).
 
-1. **Nguyễn Minh Dương** — MSSV: [tự điền]
+1. **Nguyễn Minh Dương** — MSSV: 2A202602920
 
 2. **Hoàng Trung Khải** — MSSV: 2A202602947
 
