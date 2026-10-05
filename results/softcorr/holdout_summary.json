@@ -1,0 +1,110 @@
+{
+  "label": "holdout",
+  "drives": [
+    "0052"
+  ],
+  "softcorr_commit": "331c6191195718b36cb795285c6dcb7b1610984a",
+  "frames": [
+    "0052/39"
+  ],
+  "frames_per_drive": 1,
+  "combiners": {
+    "median": "element-wise median of per-frame (rotation vector, translation) corrections (primary)",
+    "best_score": "per-frame estimate with the highest SoftCorr score summed over all chosen frames"
+  },
+  "drift_generator": {
+    "seed": 7,
+    "count": 20,
+    "rotation_limit_deg": 1.5,
+    "translation_limit_m": 0.05,
+    "drifts_evaluated": 5
+  },
+  "conversion_check_max_px": 0.00023752815650368575,
+  "from_truth": {
+    "median": {
+      "rotation_deg": 0.24092347738764391,
+      "roll_deg": -0.16311992401751216,
+      "pitch_deg": -0.17727410776228225,
+      "yaw_deg": -0.002908174691555594,
+      "translation_cm": 1.8130468277913936
+    },
+    "best_score": {
+      "rotation_deg": 0.24129676166123162,
+      "roll_deg": -0.16311992951382512,
+      "pitch_deg": -0.17727411221603676,
+      "yaw_deg": -0.0029087199336573907,
+      "translation_cm": 1.8130473088772077
+    }
+  },
+  "methods": {
+    "median": {
+      "residual_rotation_deg_median": 0.2427767769801367,
+      "residual_rotation_deg_p90": 0.24497942438287906,
+      "residual_rotation_deg_max": 0.24519722993660706,
+      "residual_translation_cm_median": 1.8453246362868503,
+      "residual_translation_cm_max": 1.8776474408435988,
+      "residual_roll_deg_median_abs": 0.1608410752601367,
+      "residual_pitch_deg_median_abs": 0.1829538271464483,
+      "residual_yaw_deg_median_abs": 0.0036100816712325134
+    },
+    "best_score": {
+      "residual_rotation_deg_median": 0.24279882104312622,
+      "residual_rotation_deg_p90": 0.24526536784737205,
+      "residual_rotation_deg_max": 0.24546492358431313,
+      "residual_translation_cm_median": 1.845324797444764,
+      "residual_translation_cm_max": 1.877647526532994,
+      "residual_roll_deg_median_abs": 0.16084102299845457,
+      "residual_pitch_deg_median_abs": 0.18295378020255526,
+      "residual_yaw_deg_median_abs": 0.003609869996167888
+    }
+  },
+  "injected_rotation_deg_median": 1.496123311254005,
+  "injected_translation_cm_median": 5.049621556973021,
+  "comparison": [
+    {
+      "method": "edge paper",
+      "drifts": 5,
+      "median_deg": 0.6051,
+      "p90_deg": 0.68284,
+      "max_deg": 0.6844,
+      "translation_left_cm_median": 5.050000000000001,
+      "seconds_per_drift": 2.8500000000000014
+    },
+    {
+      "method": "edge improved",
+      "drifts": 5,
+      "median_deg": 0.4445,
+      "p90_deg": 1.5201799999999999,
+      "max_deg": 2.1853,
+      "translation_left_cm_median": 5.050000000000001,
+      "seconds_per_drift": 2.8500000000000014
+    },
+    {
+      "method": "SoftCorr median",
+      "drifts": 5,
+      "median_deg": 0.2427767769801367,
+      "p90_deg": 0.24497942438287906,
+      "max_deg": 0.24519722993660706,
+      "translation_left_cm_median": 1.8453246362868503,
+      "seconds_per_drift": 87.31654472351075
+    },
+    {
+      "method": "SoftCorr best_score",
+      "drifts": 5,
+      "median_deg": 0.24279882104312622,
+      "p90_deg": 0.24526536784737205,
+      "max_deg": 0.24546492358431313,
+      "translation_left_cm_median": 1.845324797444764,
+      "seconds_per_drift": 87.31654472351075
+    }
+  ],
+  "seconds_per_drift_mean": 87.31654472351075,
+  "seconds_per_frame_mean": 87.31654472351075,
+  "peak_vram_gb": {
+    "moge2_inference": 2.2159838676452637,
+    "softcorr_optimisation": 0.7306761741638184
+  },
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "torch": "2.11.0+cu128",
+  "runtime_s": 526.4725110530853
+}

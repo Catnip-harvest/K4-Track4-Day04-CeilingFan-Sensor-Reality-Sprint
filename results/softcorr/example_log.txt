@@ -1,0 +1,13 @@
+image 1241x376, 118533 points with reflectivity, cuda
+31% of the cloud is in view at the initial pose; bandwidth 7.7 px
+    stage 0  sigma  61.4 px  ->  0.434 deg / 94.1 mm from ground truth
+    stage 1  sigma  46.1 px  ->  0.085 deg / 40.0 mm from ground truth
+    stage 2  sigma  30.7 px  ->  0.081 deg / 27.1 mm from ground truth
+    stage 3  sigma  23.0 px  ->  0.075 deg / 15.8 mm from ground truth
+    stage 4  sigma  15.4 px  ->  0.054 deg / 14.0 mm from ground truth
+    stage 5  sigma  11.5 px  ->  0.065 deg / 16.0 mm from ground truth
+    stage 6  sigma   7.7 px  ->  0.084 deg / 19.3 mm from ground truth
+moved 0.650 deg / 291.4 mm from the initial guess; 31% of the cloud in view; score -4.1949
+error against ground truth: 0.084 deg / 19.3 mm
+wrote T_lidar_cam.txt, projection_initial.png, projection_calibrated.png  ->  results\calibrate\kitti_00_002887
+wall 698 s

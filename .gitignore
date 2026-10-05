@@ -10,3 +10,8 @@ third_party/
 
 __pycache__/
 *.pyc
+
+# Other local environments and downloaded model weights
+.venv-*/
+*.pt
+*.safetensors

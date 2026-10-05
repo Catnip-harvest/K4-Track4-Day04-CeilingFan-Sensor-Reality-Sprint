@@ -2,6 +2,7 @@
 
 **Lệnh chạy:** `python run_benchmark.py` — 74.8 s trên CPU laptop (Python 3.13.14, numpy 2.2.6, không GPU).
 **Kiểm định:** `python validate_holdout.py --drives 0048 0005 --label dev` (162.8 s) và `python validate_holdout.py --drives 0052 --label holdout` (135.6 s).
+**Bổ sung trên 0052:** `.venv-yolo/Scripts/python detection_check.py` (kiểm tra bằng phát hiện vật thể) và `.venv-softcorr/Scripts/python.exe softcorr_eval.py --drives 0052 --label holdout --frames-per-drive 1 --time-budget-min 10` (SoftCorr, GPU).
 **Dữ liệu:** KITTI raw 2011_09_26, drive 0048 (22 frame) và drive 0005 (154 frame); dùng mỗi frame thứ 2 → 11 + 77 = 88 frame. Đây là drive dev.
 Drive 0052 (78 frame, dùng 39) chỉ dùng để kiểm định, không dùng để tinh chỉnh.
 Mọi con số dưới đây lấy từ `results/` và `results/holdout/` của các lần chạy này.
@@ -139,6 +140,41 @@ Bản improved vẫn tốt hơn ở trung vị (0.44° so với 0.55°) nhưng k
 Cả ba ca đều bắt đầu với roll ≈ −1.4° và pitch ≈ +1°, và roll, pitch gần như không đổi sau khi chỉnh: bộ chỉnh dừng ở một đỉnh giả nơi roll và pitch bù trừ nhau (mục 4).
 Ưu thế về vị trí đỉnh điểm số trên dev (0.15° so với 0.50°) không lặp lại trên 0052.
 
+### Kiểm tra bằng phát hiện vật thể (gợi ý của giảng viên)
+
+Lệnh: `.venv-yolo/Scripts/python detection_check.py` (3.1 s khi đã có bộ đệm phát hiện). Số liệu: `results/detection_check/summary.json`, `random_drifts_0052.csv`, hình `detection_check.png`; chi tiết ở [docs/DETECTION_CHECK.md](docs/DETECTION_CHECK.md).
+Camera chạy YOLO26n (COCO, ultralytics 8.4.173) trên cam 2; hộp 3D tracklet của KITTI đóng vai bộ phát hiện LiDAR và được chiếu lên ảnh bằng extrinsic hiện tại. Cặp hộp được ghép một lần tại hiệu chuẩn đúng (118 cặp trên 0052) rồi giữ nguyên. Luật độ lệch tâm báo khi trung vị Δu hoặc Δv lệch quá 3 px so với mức nền của drive dev; yaw, pitch ước lượng bằng atan(Δ / f), lặp 4 lần.
+
+| Trên 0052 | Phát hiện vật thể | Căn cạnh, paper | Căn cạnh, improved |
+|---|---|---|---|
+| Báo nhầm khi hiệu chuẩn đúng | không | không | không |
+| Bắt được 20 lệch ngẫu nhiên | 95 % (độ lệch tâm) / 85 % (IoU) | 95 % | 90 % |
+| Sai số xoay còn lại, trung vị / phân vị 90 | 0.45° / 1.46° | 0.55° / 0.70° | 0.44° / 1.75° |
+| Trung vị \|roll\| còn lại | 0.41° | 0.30° | 0.13° |
+| Trung vị \|pitch\| / \|yaw\| còn lại | **0.09° / 0.10°** | 0.21° / 0.15° | 0.18° / 0.15° |
+
+- *Cận trên:* tracklet KITTI là bộ phát hiện LiDAR hoàn hảo; PointPillars hay CenterPoint thật sẽ bỏ sót vật và thêm nhiễu hộp. Ghép cặp tại hiệu chuẩn đúng cũng lạc quan.
+- *Không thấy roll:* roll xoay hộp quanh tâm ảnh chứ không làm chúng trượt. Lệch bị bỏ sót duy nhất (số 4) gần như chỉ có roll (−1.39°), và phân vị 90 cao là do roll còn nguyên.
+- *Cần đủ vật:* 0052 cho khoảng 3 cặp mỗi frame; đường vắng thì không có tín hiệu.
+
+### SoftCorr: hiệu chuẩn lại 6 bậc tự do (0052, mới 5/20 lệch)
+
+Lệnh: `.venv-softcorr/Scripts/python.exe softcorr_eval.py --drives 0052 --label holdout --frames-per-drive 1 --time-budget-min 10` (526.5 s, dừng ở giới hạn thời gian sau 5 lệch). SoftCorr commit `331c6191195718b36cb795285c6dcb7b1610984a`, độ sâu đơn ảnh MoGe-2, RTX 4060 Laptop 8 GB. Số liệu: `results/softcorr/holdout_summary.json`, `holdout_random_drifts.csv`, `holdout_log.txt`; cài đặt ở [docs/SOFTCORR_SETUP.md](docs/SOFTCORR_SETUP.md).
+
+| Cùng 5 lệch đầu (0–4) của 0052 | Căn cạnh, paper | Căn cạnh, improved | SoftCorr (median) |
+|---|---|---|---|
+| Sai số xoay còn lại, trung vị | 0.605° | 0.445° | **0.243°** |
+| Phân vị 90 / tệ nhất | 0.683° / 0.684° | 1.520° / 2.185° | 0.245° / 0.245° |
+| Dịch còn lại, trung vị | 5.05 cm (không chỉnh dịch) | 5.05 cm (không chỉnh dịch) | 1.85 cm |
+| Thời gian mỗi lệch | 2.85 s, CPU | 2.85 s, CPU | 87.3 s, GPU |
+
+- *Chỉ 5/20 lệch, mỗi lệch 1 frame (0052/39).* Chưa chạy 15 lệch còn lại, nhiều frame, hay drive dev.
+- *Hội tụ về một điểm cố định:* xuất phát ngay tại hiệu chuẩn KITTI, SoftCorr cũng dời đi 0.241° / 1.8 cm (roll −0.16°, pitch −0.18°). Mọi lệch đều về cùng điểm đó, nên 0.24° là độ lệch cố định giữa đỉnh điểm số của frame này và hiệu chuẩn KITTI, không phải độ tán. *Giả thuyết:* dùng nhiều frame sẽ kéo điểm này lại gần; với một frame không tách được lỗi của SoftCorr khỏi lỗi của chính hiệu chuẩn KITTI.
+- *Kiểm tra quy đổi:* phép chiếu của SoftCorr và `t3calib.geometry.project` khớp nhau tới 0.0002 px trên 16 605 điểm. Ví dụ gốc trong README của SoftCorr, nhóm chạy lại được 0.084° / 19.3 mm (README cho biết khoảng 0.08° / 20 mm).
+- *Hệ quả:* SoftCorr chậm khoảng 30 lần và cần GPU (VRAM đỉnh 2.22 GB cho MoGe-2, 0.73 GB cho tối ưu), nên hợp làm tầng hiệu chuẩn lại sau khi monitor báo, không làm monitor chạy liên tục.
+
+### Kết luận mục 3
+
 **Kết luận từ paper** (Levinson & Thrun 2013, trên dữ liệu riêng của họ, không phải KITTI): phát hiện lệch trong vòng một giây khi lỗi vượt 0.25° hoặc 10 cm, chính xác 100 %; theo dõi lệch xoay với sai số trung bình 0.10°.
 DF-Calib báo cáo trên KITTI sai số 0.045° xoay và 0.635 cm dịch. Nhóm không chạy lại các con số này.
 
@@ -151,6 +187,7 @@ DF-Calib báo cáo trên KITTI sai số 0.045° xoay và 0.635 cm dịch. Nhóm 
 5. **Monitor improved**, trên drive dev, bắt được yaw và pitch từ 0.5°, ty và tz từ 10 cm. Nó không bắt được roll tới 2° và tx tới 20 cm. Nhóm **không** đạt mức 0.25° của paper trên KITTI.
 6. **Tự chỉnh xoay**, trên một ca lệch thực tế của drive dev, đưa 1.47° về 0.12° (bản improved), lỗi chiếu từ 20.7 px về 1.5 px, đo sai khoảng cách về đúng mức nền 3.3 %. Đây là một ca, không phải mức chung.
 7. **Trên drive kiểm định 0052, bản improved không tốt hơn rõ ràng.** Không bản nào báo nhầm; bản paper bắt 95 %, bản improved 90 % trong 20 độ lệch ngẫu nhiên. Bản improved tốt hơn trên drive dev và ở trung vị trên 0052 (0.44° so với 0.55°). Nhưng nó kém tin cậy hơn: 3/20 ca chỉnh hỏng vì đỉnh giả roll–pitch, phân vị 90 là 1.75° so với 0.70° của bản paper.
+8. **Hai phương pháp bổ sung trên 0052.** Kiểm tra bằng phát hiện vật thể bắt 95 % và chỉnh pitch, yaw tốt nhất (còn khoảng 0.1°) nhưng không thấy roll; đây là cận trên vì phía LiDAR dùng tracklet. SoftCorr chỉnh được cả dịch (còn 1.85 cm) và cho 0.24° ổn định, nhưng mới đo 5/20 lệch trên một frame và chậm khoảng 30 lần.
 
 ## 4. Failure case — trường hợp hỏng
 
@@ -226,6 +263,9 @@ Ca này nặng hơn ca roll ở trên. Nó đo được trên dữ liệu chưa 
 - Han et al., "DF-Calib / UniCalib: Targetless LiDAR-Camera Calibration via Depth Flow", arXiv 2025 — https://arxiv.org/abs/2504.01416 (báo cáo KITTI 0.045° xoay, 0.635 cm dịch)
 - J. Moravec, R. Šára, "Online Camera-LiDAR Calibration Monitoring and Rotational Drift Tracking", IEEE T-RO 2024, DOI 10.1109/TRO.2023.3347130 — bản thảo miễn phí http://hdl.handle.net/10467/113999, code https://github.com/moravecj/OCaMo (MATLAB)
 - Tahiraj et al., "Cal or No Cal? Real-Time Miscalibration Detection of LiDAR and Camera Sensors", arXiv 2504.01040 — code https://github.com/TUMFTM/MiscalibrationDetection
+- SoftCorr (giấy phép MIT) — https://github.com/yuhyun00/SoftCorr, commit `331c6191195718b36cb795285c6dcb7b1610984a`; cài đặt và số đo: [docs/SOFTCORR_SETUP.md](docs/SOFTCORR_SETUP.md)
+- MoGe-2 (Microsoft), độ sâu đơn ảnh dùng trong SoftCorr — https://github.com/microsoft/MoGe, commit `0286b495230a074aadf1c76cc5c679e943e5d1c6` (v2.0.0), checkpoint `Ruicheng/moge-2-vitl-normal`
+- Ultralytics YOLO26n (COCO), bộ phát hiện camera của kiểm tra bằng phát hiện vật thể — https://github.com/ultralytics/ultralytics, ultralytics 8.4.173, trọng số `yolo26n.pt`; phương pháp: [docs/DETECTION_CHECK.md](docs/DETECTION_CHECK.md)
 - A. Geiger et al., KITTI raw data, IJRR 2013 — https://www.cvlibs.net/datasets/kitti/raw_data.php (giấy phép CC BY-NC-SA 3.0, phi thương mại)
 
 **Repo liên quan:** TUMFTM/MiscalibrationDetection (danh sách Eigen có 0005 và 0048), CalibNet (epiception/CalibNet, danh sách tải có cả hai drive), NetCalib2 (0005 nằm trong tập test). Vì các drive này đã có trong dữ liệu train, phương pháp học máy sẽ cho kết quả lạc quan trên 0005/0048. Không repo nào chạy được trên Windows CPU mà không cần CUDA hoặc TensorFlow cũ, nên dự án này tự cài đặt bằng NumPy.
