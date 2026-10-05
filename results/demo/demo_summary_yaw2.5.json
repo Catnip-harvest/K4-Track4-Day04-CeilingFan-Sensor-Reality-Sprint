@@ -1,0 +1,76 @@
+{
+  "command": "python demo.py --yaw 2.5 --pitch 0 --roll 0 --tx 0",
+  "drive": "0052",
+  "frames": [
+    0,
+    7,
+    14,
+    21,
+    28,
+    35,
+    42,
+    49,
+    56,
+    63,
+    70,
+    77
+  ],
+  "object_views": 35,
+  "variant": "improved",
+  "knock": {
+    "roll": 0.0,
+    "pitch": 0.0,
+    "yaw": 2.5,
+    "tx": 0.0,
+    "ty": 0.0,
+    "tz": 0.0
+  },
+  "trigger_below": 0.9,
+  "neighbour_step": {
+    "deg": 0.5,
+    "m": 0.1
+  },
+  "true_calibration": {
+    "neighbours_worse": 1.0,
+    "alarm": false,
+    "association_retention_pct": 100.0,
+    "objects_lost_pct": 0.0,
+    "range_miss_pct": 8.571428571428571,
+    "association_retention_pct_near": 100.0,
+    "range_miss_pct_near": 0.0,
+    "association_retention_pct_far": 100.0,
+    "range_miss_pct_far": 12.5
+  },
+  "knocked": {
+    "neighbours_worse": 0.5961538461538461,
+    "alarm": true,
+    "rotation_deg": 2.4999999999998073,
+    "translation_cm": 5.722122844324851e-15,
+    "association_retention_pct": 62.724147380141396,
+    "objects_lost_pct": 31.428571428571427,
+    "range_miss_pct": 34.285714285714285,
+    "association_retention_pct_near": 84.77408620430519,
+    "range_miss_pct_near": 0.0,
+    "association_retention_pct_far": 52.61792541906634,
+    "range_miss_pct_far": 50.0
+  },
+  "corrected": {
+    "neighbours_worse": 1.0,
+    "alarm": false,
+    "rotation_left_deg": 0.14142135553389307,
+    "roll_left_deg": -0.019999999999994144,
+    "pitch_left_deg": 5.909875601887205e-15,
+    "yaw_left_deg": 0.14000000000000393,
+    "translation_left_cm": 5.722122844324851e-15,
+    "association_retention_pct": 99.8812636204814,
+    "objects_lost_pct": 0.0,
+    "range_miss_pct": 11.428571428571429,
+    "association_retention_pct_near": 99.95982912373127,
+    "range_miss_pct_near": 0.0,
+    "association_retention_pct_far": 99.8452544314919,
+    "range_miss_pct_far": 16.666666666666664
+  },
+  "showcase_frame": 28,
+  "figure": "C:\\Users\\vieth\\Documents\\vinuni\\K4-Track4-Day4-T3-CalibDrift\\results\\demo\\demo_before_after.png",
+  "runtime_s": 3.642504930496216
+}

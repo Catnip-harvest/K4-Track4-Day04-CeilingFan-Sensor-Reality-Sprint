@@ -1,0 +1,28 @@
+================================================================
+  DEMO: camera-LiDAR bị va lệch -> báo động -> tự hiệu chuẩn lại
+================================================================
+[  0.6 s] Dữ liệu: KITTI drive 0052, 12 khung hình, 35 vật có nhãn
+
+1) Hiệu chuẩn đúng (KITTI)
+   Sức khỏe: OK - hiệu chuẩn tốt   (100% hàng xóm kém hơn, ngưỡng 90%)
+   (0.2 s)
+
+2) Va chạm: lệch roll +0.3°, pitch -0.8°, yaw +1.2°, tx +5 cm
+   Sức khỏe: BÁO ĐỘNG - cần hiệu chuẩn lại   (33% hàng xóm kém hơn, ngưỡng 90%)
+   Điểm LiDAR còn trong box 2D: 73 %   (khi đúng: 100 %)
+   Late fusion đo sai khoảng cách: 26 % số vật   (khi đúng: 9 %)
+   (0.2 s)
+
+3) Tự hiệu chuẩn lại (chỉ sửa xoay, không cần bảng target)
+   Lệch xoay: 1.47° -> còn 0.12°
+   Theo trục: roll +0.08°, pitch +0.03°, yaw +0.08°
+   Lệch tịnh tiến còn lại: 5.0 cm   (phương pháp không sửa tịnh tiến)
+   Sức khỏe: OK - hiệu chuẩn tốt   (100% hàng xóm kém hơn)
+   Điểm LiDAR còn trong box 2D: 73 % -> 100 %
+   Late fusion đo sai khoảng cách: 26 % -> 11 %
+   (1.9 s)
+
+4) Ảnh trước/sau: results\demo\demo_before_after.png   (0.8 s)
+================================================================
+  Xong trong 4 s. Kết quả: results\demo
+================================================================
