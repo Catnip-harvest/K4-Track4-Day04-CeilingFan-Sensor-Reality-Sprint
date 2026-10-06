@@ -1,0 +1,29 @@
+ground-plane check | python 3.12.10 | numpy 2.2.6
+drive 0052 | every 2 frame | 20 drifts from validate_holdout.py | seed 7
+roll detection rule: |estimated roll| >= 0.5 deg
+drift  0: roll +0.375 -> +0.380 deg, pitch +1.192 -> +1.184 deg, camera-normal change 1.243 deg, roll detected=False
+drift  1: roll -1.484 -> -1.488 deg, pitch +0.964 -> +0.961 deg, camera-normal change 1.771 deg, roll detected=True
+drift  2: roll -0.735 -> -0.735 deg, pitch -0.165 -> -0.163 deg, camera-normal change 0.756 deg, roll detected=True
+drift  3: roll +0.367 -> +0.345 deg, pitch +1.467 -> +1.426 deg, camera-normal change 1.472 deg, roll detected=False
+drift  4: roll -1.393 -> -1.389 deg, pitch +0.045 -> +0.042 deg, camera-normal change 1.392 deg, roll detected=True
+drift  5: roll -0.009 -> -0.028 deg, pitch -0.757 -> -0.766 deg, camera-normal change 0.767 deg, roll detected=False
+drift  6: roll -0.391 -> -0.384 deg, pitch -1.489 -> -1.487 deg, camera-normal change 1.532 deg, roll detected=False
+drift  7: roll +0.029 -> +0.023 deg, pitch +1.041 -> +1.039 deg, camera-normal change 1.040 deg, roll detected=False
+drift  8: roll +0.023 -> +0.006 deg, pitch +1.114 -> +1.093 deg, camera-normal change 1.094 deg, roll detected=False
+drift  9: roll -0.531 -> -0.521 deg, pitch -1.049 -> -1.048 deg, camera-normal change 1.168 deg, roll detected=True
+drift 10: roll +0.315 -> +0.316 deg, pitch +0.414 -> +0.418 deg, camera-normal change 0.521 deg, roll detected=False
+drift 11: roll -0.293 -> -0.293 deg, pitch -1.210 -> -1.205 deg, camera-normal change 1.242 deg, roll detected=False
+drift 12: roll +1.122 -> +1.106 deg, pitch +0.487 -> +0.474 deg, camera-normal change 1.203 deg, roll detected=True
+drift 13: roll +0.209 -> +0.196 deg, pitch -1.064 -> -1.072 deg, camera-normal change 1.090 deg, roll detected=False
+drift 14: roll +1.152 -> +1.144 deg, pitch +0.425 -> +0.432 deg, camera-normal change 1.221 deg, roll detected=True
+drift 15: roll -1.386 -> -1.396 deg, pitch +1.129 -> +1.114 deg, camera-normal change 1.785 deg, roll detected=True
+drift 16: roll -1.424 -> -1.440 deg, pitch -0.383 -> -0.397 deg, camera-normal change 1.489 deg, roll detected=True
+drift 17: roll -0.215 -> -0.206 deg, pitch +0.071 -> +0.083 deg, camera-normal change 0.223 deg, roll detected=False
+drift 18: roll -0.434 -> -0.426 deg, pitch +0.057 -> +0.068 deg, camera-normal change 0.432 deg, roll detected=False
+drift 19: roll -1.484 -> -1.488 deg, pitch +0.759 -> +0.760 deg, camera-normal change 1.666 deg, roll detected=True
+
+case 14: injected roll +1.1522 deg; estimated +1.1437 deg; error -0.0085 deg; detected=True
+median |roll error|: 0.0081 deg
+median |pitch error|: 0.0075 deg
+runtime: 19.0 s
+wrote D:\VinAI\Labs\K4-Track4-Day04-CeilingFan-Sensor-Reality-Sprint\results\ground_check\ground_check.csv and D:\VinAI\Labs\K4-Track4-Day04-CeilingFan-Sensor-Reality-Sprint\results\ground_check\ground_check.png

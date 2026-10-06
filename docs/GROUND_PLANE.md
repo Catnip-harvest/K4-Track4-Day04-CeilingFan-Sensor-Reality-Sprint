@@ -2,45 +2,50 @@
 
 ## Cách đo
 
-Chạy:
+Lệnh chạy:
 
 ```bash
-python ground_plane_check.py --drives 0048 0005 0052
+python ground_plane_check.py
 ```
 
-Với mỗi scan, script giữ vùng có khả năng là mặt đường (`2 < x < 40 m`, `|y| < 10 m`,
-`-3 < z < -0.5 m`), fit `z = ax + by + c` bằng `numpy.linalg.lstsq`, rồi loại outlier
-lặp bằng ngưỡng MAD. Scan được mô phỏng nghiêng bằng nghịch đảo phần quay của `Drift` với
-roll hoặc pitch thuộc `{0, 0.5, 1, 2}°`. Góc ước lượng được trừ góc mặt đường của frame gốc,
-sau đó lấy trung vị qua các frame.
+Script dùng drive hold-out 0052 và đúng 20 drift sinh bởi `draw_random_drifts()` trong
+`validate_holdout.py` (seed 7). Với mỗi scan, script giữ vùng có khả năng là mặt đường
+(`2 < x < 40 m`, `|y| < 10 m`, `-3 < z < -0.5 m`), fit mặt phẳng bằng RANSAC NumPy rồi
+least-squares trên inlier. Scan được xoay bằng nghịch đảo phần quay của `Drift`; tịnh tiến và yaw
+không thể suy ra riêng từ một pháp tuyến mặt đường.
 
-Kết quả đầy đủ nằm trong [`results/ground_plane/ground_plane.csv`](../results/ground_plane/ground_plane.csv)
-và hình trong [`results/ground_plane/ground_plane.png`](../results/ground_plane/ground_plane.png).
+Roll/pitch được đo tương đối với mặt phẳng gốc của cùng frame, sau đó lấy trung vị qua 39 frame.
+Pháp tuyến còn được chuyển từ hệ LiDAR sang hệ camera bằng phần quay của extrinsic KITTI; CSV lưu
+ba thành phần pháp tuyến camera và góc thay đổi của nó. Quy tắc phát hiện roll dùng trong phép thử là
+`|roll ước lượng| >= 0,5°`.
+
+Kết quả: [ground_check.csv](../results/ground_check/ground_check.csv),
+[ground_check_log.txt](../results/ground_check/ground_check_log.txt) và
+[ground_check.png](../results/ground_check/ground_check.png).
 
 ## Kết quả
 
-Bảng dưới là trung vị sai số tuyệt đối của đúng trục được tiêm, đơn vị độ. Dùng mỗi frame thứ hai:
-11 frame ở 0048, 77 frame ở 0005 và 39 frame ở 0052.
+Trên 20 drift, trung vị sai số tuyệt đối là **0,0081° cho roll** và **0,0075° cho pitch**.
+Một số ca đại diện:
 
-| Drive | Trục | 0° | 0.5° | 1° | 2° |
-|---|---|---:|---:|---:|---:|
-| 0048 | roll | 0.000 | 0.014 | 0.031 | 0.121 |
-| 0048 | pitch | 0.000 | 0.002 | 0.005 | 0.020 |
-| 0005 | roll | 0.000 | 0.002 | 0.005 | 0.012 |
-| 0005 | pitch | 0.000 | 0.019 | 0.042 | 0.068 |
-| 0052 | roll | 0.000 | 0.006 | 0.007 | 0.010 |
-| 0052 | pitch | 0.000 | 0.002 | 0.010 | 0.106 |
+| Drift | Roll tiêm → ước lượng | Pitch tiêm → ước lượng | Roll được phát hiện? |
+|---:|---:|---:|:---:|
+| 1 | −1,484° → −1,488° | +0,964° → +0,961° | Có |
+| 6 | −0,391° → −0,384° | −1,489° → −1,487° | Không, vì roll < 0,5° |
+| 12 | +1,122° → +1,106° | +0,487° → +0,474° | Có |
+| **14** | **+1,152° → +1,144°** | **+0,425° → +0,432°** | **Có** |
+| 19 | −1,484° → −1,488° | +0,759° → +0,760° | Có |
 
-**Kết luận:** cách này bắt được roll 1° trên cả ba drive. Ước lượng trung vị lần lượt là
-0.969°, 0.995° và 0.993°; sai số tuyệt đối trung vị lớn nhất chỉ 0.031°. Pitch 1° cũng được
-ước lượng trong khoảng 0.966–0.997°.
+**Kết luận nghiệm thu:** ground check bắt được case 14 mà edge monitor bỏ qua. Case này có roll
++1,1522°, ground check ước lượng +1,1437° (sai số −0,0085°) và vượt ngưỡng phát hiện 0,5°.
+Trong kết quả hold-out hiện có, cả monitor paper và improved đều không kích hoạt ở case 14
+(`neighbours_worse = 0,9423`).
 
 ## Giới hạn
 
-- Mặt đường dốc hoặc nghiêng ngang làm đổi pháp tuyến. Phép thử mô phỏng ở đây trừ baseline của
-  cùng frame nên cô lập được drift; hệ thống thực tế cần baseline đã biết hoặc gom nhiều đoạn đường
-  để không báo nhầm độ dốc thành lỗi cảm biến.
-- Lọc theo vùng hình học và least-squares vẫn có thể bị ảnh hưởng bởi lề đường, vật cản hoặc quá ít
-  điểm đường; MAD chỉ giảm chứ không loại bỏ hoàn toàn rủi ro này.
-- Pháp tuyến mặt đường chỉ đo hướng LiDAR so với xe/mặt đường. Nó không đo trực tiếp LiDAR so với
-  camera, không bắt yaw hay tịnh tiến, nên phải dùng bổ sung cho health check camera–LiDAR hiện có.
+- Mặt đường dốc hoặc nghiêng ngang làm đổi pháp tuyến. Phép mô phỏng này trừ baseline của cùng frame
+  để cô lập drift; hệ thống thật cần baseline đã biết hoặc gom nhiều đoạn đường để tránh báo độ dốc
+  thành lỗi cảm biến.
+- RANSAC vẫn có thể fit nhầm lề đường hoặc vật cản khi vùng quan sát có quá ít điểm mặt đường.
+- Pháp tuyến chỉ đo LiDAR so với xe/mặt đường, không đo trực tiếp LiDAR so với camera. Nó không quan
+  sát được yaw hay tịnh tiến, nên chỉ là ràng buộc bổ sung cho health monitor camera–LiDAR.
