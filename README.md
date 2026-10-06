@@ -39,12 +39,29 @@ Repository: https://github.com/Catnip-harvest/K4-Track4-Day04-CeilingFan-Sensor-
 - Packages actually imported by the code: `numpy`, `pandas`, `matplotlib`, `pillow`, `opencv-python`.
   `scipy` is listed in the course template but the current code does not import it.
 
+Install the versions used for the committed results from [`requirements.txt`](requirements.txt):
+
 ```bash
-pip install numpy pandas matplotlib pillow opencv-python
+python -m pip install -r requirements.txt
 ```
 
 Versions used for the committed results: numpy 2.2.6, pandas 3.0.5, matplotlib 3.11.1,
 Pillow 12.3.0, OpenCV 5.0.0.
+
+To download all required drives and run the benchmark, held-out validation, and demo in one command with
+[`run_all.ps1`](run_all.ps1) on Windows:
+
+```powershell
+.\run_all.ps1
+```
+
+On Linux/macOS, use [`run_all.sh`](run_all.sh):
+
+```bash
+./run_all.sh
+```
+
+Both scripts stop immediately when any step fails.
 
 ## 1. Get the data
 
