@@ -1,0 +1,61 @@
+per-class association | python 3.13.1 | numpy 2.4.2
+command: python per_class_analysis.py --data-dir D:/datasets/KITTI
+drive 0048: 22 frames on disk, using 11 (every 2)
+drive 0005: 154 frames on disk, using 77 (every 2)
+88 frames | 241 object views | tracklets in these drives {'Van': 4, 'Car': 16, 'Cyclist': 1, 'Pedestrian': 2}
+[ 19.3 s] metrics done
+
+Object views per label (few = fewer than 30, no conclusion drawn)
+     label distance_group  object_views  tracklets_in_drives  median_distance_m  median_box_width_px
+       Car            all            88                   16               18.0                116.9
+       Car    far >= 20 m            34                   16               26.1                 67.7
+       Car    near < 20 m            54                   16               14.7                141.8
+       Van            all            84                    4               28.9                100.4
+       Van    far >= 20 m            55                    4               36.0                 86.1
+       Van    near < 20 m            29                    4               17.9                132.0
+   Cyclist            all            66                    1               11.4                 73.2
+   Cyclist    near < 20 m            66                    1               11.4                 73.2
+Pedestrian            all             3                    2               10.8                115.8
+Pedestrian    near < 20 m             3                    2               10.8                115.8
+
+association_retention_pct (all distances)
+axis       pitch                    yaw                 
+drift_deg    0.0   0.5   1.0  2.0   0.0   0.5   1.0  2.0
+label                                                   
+Car        100.0  97.7  88.5 68.0 100.0  98.5  93.7 80.2
+Van        100.0  98.8  87.8 58.2 100.0  94.7  86.3 67.3
+Cyclist    100.0 100.0  99.9 94.9 100.0  99.9  97.6 76.1
+Pedestrian 100.0 100.0 100.0 97.0 100.0 100.0 100.0 95.2
+
+association_retention_pct by distance
+axis                      pitch                    yaw                 
+drift_deg                   0.0   0.5   1.0  2.0   0.0   0.5   1.0  2.0
+label      distance_group                                              
+Car        far >= 20 m    100.0  94.2  71.8 38.4 100.0  96.6  88.1 64.9
+           near < 20 m    100.0 100.0  99.1 86.7 100.0  99.6  97.3 89.8
+Van        far >= 20 m    100.0  98.1  82.0 43.0 100.0  92.8  82.6 59.4
+           near < 20 m    100.0 100.0  98.8 87.1 100.0  98.3  93.4 82.4
+Cyclist    near < 20 m    100.0 100.0  99.9 94.9 100.0  99.9  97.6 76.1
+Pedestrian near < 20 m    100.0 100.0 100.0 97.0 100.0 100.0 100.0 95.2
+
+range_miss_pct (all distances)
+axis       pitch                yaw               
+drift_deg    0.0  0.5  1.0  2.0 0.0 0.5  1.0   2.0
+label                                             
+Car          9.1 10.2 11.4 46.6 9.1 4.5  0.0  19.3
+Van          0.0  0.0  1.2 28.6 0.0 0.0  1.2  27.4
+Cyclist      0.0  0.0  0.0  0.0 0.0 0.0 16.7 100.0
+Pedestrian   0.0  0.0  0.0  0.0 0.0 0.0 33.3  33.3
+
+range_miss_pct by distance
+axis                      pitch                 yaw                
+drift_deg                   0.0  0.5  1.0  2.0  0.0  0.5  1.0   2.0
+label      distance_group                                          
+Car        far >= 20 m     23.5 26.5 29.4 94.1 23.5 11.8  0.0  50.0
+           near < 20 m      0.0  0.0  0.0 16.7  0.0  0.0  0.0   0.0
+Van        far >= 20 m      0.0  0.0  1.8 40.0  0.0  0.0  1.8  41.8
+           near < 20 m      0.0  0.0  0.0  6.9  0.0  0.0  0.0   0.0
+Cyclist    near < 20 m      0.0  0.0  0.0  0.0  0.0  0.0 16.7 100.0
+Pedestrian near < 20 m      0.0  0.0  0.0  0.0  0.0  0.0 33.3  33.3
+
+[ 20.0 s] finished. Results in D:\AI-Vin\K4-Track4-Day04-CeilingFan-Sensor-Reality-Sprint\results\per_class
